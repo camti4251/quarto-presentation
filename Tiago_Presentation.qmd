@@ -1,0 +1,335 @@
+
+---
+title: "Literate Programming with Quarto"
+subtitle: "Combining text, code and results"
+author: "Tiago José Camelo Moura"
+date: "November 18, 2026"
+
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    transition: none
+    progress: true
+    center: false
+    width: 1280
+    height: 720
+    navigation-mode: linear
+
+bibliography: references.bib
+csl: apa.csl
+lang: en
+---
+
+
+
+## Introduction 
+
+### Why does documentation matter?
+
+When we work with data, we do more than calculate numbers.
+
+We also need to explain:
+
+- What we did
+- Why we did it
+- How we got the results
+
+Code and explanations should be easy to follow.
+
+::: notes
+Hello everyone. Today I want to talk about literate programming and how we can use Quarto.
+
+When we work with data, it is not enough to calculate a result. We should also explain how we got it. This is important because other people may want to understand or check our work.
+:::
+
+## The problem
+
+### Code and explanations are often separated
+
+Imagine working on a data analysis.
+
+- You write your code in RStudio.
+- You get some results.
+- You copy the results into a Word document.
+- You write your explanation separately.
+
+If you change the code later, you may also have to update the results in your document.
+
+This can make the process confusing and time-consuming (Rodrigues, 2023).
+
+::: notes
+Think about a normal data analysis project. We often have one file for the code and another file for the report.
+
+The problem is that the results in the report do not always change automatically when we update the code. This is one reason why combining code and explanations can be useful.
+:::
+
+## What is Literate Programming?
+
+Literate programming combines:
+
+- Programming code
+- Explanatory text
+- Results of the code
+
+The code tells the computer what to do.
+
+The text helps people understand what is happening.
+
+The main idea is to make code easier to read and understand (Knuth, 1984; Rodrigues, 2023).
+
+::: notes
+Literate programming is not just about writing code. It is also about explaining the code.
+
+The computer needs instructions, but people need explanations. With literate programming, both are part of the same document.
+
+Donald Knuth introduced the concept in 1984.
+:::
+
+## Why is reproducibility important?
+
+In research and data analysis, other people should be able to follow the work.
+
+This means they should be able to understand:
+
+- Which data were used
+- Which steps were taken
+- Which code was used
+- How the results were produced
+
+Good documentation makes an analysis easier to check and repeat (Rodrigues, 2023; The Carpentries, 2025).
+
+::: notes
+Reproducibility is an important part of data analysis.
+
+For example, if another student wants to understand my results, they should be able to see what I did and which code I used.
+
+This does not mean that every analysis will automatically give the same result in every situation. The data, software and working environment also matter.
+:::
+
+## What is Quarto?
+
+Quarto is an open source publishing system.
+
+It allows us to combine:
+
+- Normal text
+- Programming code
+- Results and visualisations
+
+We can use it to create documents and presentations in formats such as HTML and PDF.
+
+It works with languages such as R and Python (Quarto Development Team, n.d.; The Carpentries, 2025).
+
+::: notes
+Quarto is a tool that helps us put this idea into practice.
+
+We can write normal text, add code and show the results in one document. Quarto can then turn this document into different formats.
+
+For example, we can create an HTML document or a PDF.
+:::
+
+## How does a Quarto document work?
+
+A Quarto document usually contains three main parts.
+
+| Part        | What does it do?           |
+|-------------|----------------------------|
+| YAML        | Contains document settings |
+| Markdown    | Contains text and headings |
+| Code chunks | Contain executable code    |
+
+The file has the extension `.qmd`.
+
+(The Carpentries, 2025)
+
+::: notes
+A Quarto document is saved as a QMD file.
+
+There are three important parts. YAML is at the top and contains settings like the title and author. Markdown is used for normal text and headings. Code chunks contain code that Quarto can execute.
+:::
+
+## A small R example
+
+Imagine we want to calculate the average number of hours that students studied.
+
+We have five values:
+
+```{r}
+study_hours <- c(4, 6, 8, 5, 7)
+```
+
+The values are stored in a variable called `study_hours`.
+
+::: notes
+Here is a small example using R.
+
+I have five values. Each value represents the number of hours a student studied. First, I store these values in a variable called study_hours.
+:::
+
+## Calculating the average
+
+We can use the `mean()` function in R.
+
+```{r}
+average_hours <- mean(study_hours)
+average_hours
+```
+
+The average is **6 hours**.
+
+::: notes
+Now I use the mean function. Mean calculates the average of the values.
+
+The result is six hours. Quarto executes the code and displays the result in the document. If I change the values and render the document again, the calculation is updated.
+:::
+
+## What are code chunks?
+
+Code chunks are sections in a Quarto document where we can write and execute code.
+
+For example:
+
+```` markdown
+```{r}
+numbers <- c(2, 4, 6)
+mean(numbers)
+```
+````
+
+We can also control how the code is displayed.
+
+- `echo: true` shows the code.
+- `echo: false` hides the code.
+- `eval: false` prevents the code from running.
+
+(The Carpentries, 2025)
+
+::: notes
+Code chunks are an important part of Quarto.
+
+They allow us to include R code directly in the document. We can decide if the code should be visible or hidden.
+
+For a presentation, showing the code can be useful because the audience can see how the result was calculated.
+:::
+
+## What happens when we render?
+
+The `.qmd` file is the source document.
+
+When we render it, Quarto processes the text and executes the code chunks.
+
+The result can be an HTML document or another supported output format.
+
+This means that the text, code and results stay connected (Quarto Development Team, n.d.).
+
+::: notes
+Rendering means creating the final document from the QMD file.
+
+Quarto reads the document, processes the text and runs the code chunks. It then creates the output.
+
+This is useful because we do not have to copy every result manually into another document.
+:::
+
+## Advantages and limitations
+
+| Advantages                    | Limitations                        |
+|-------------------------------|------------------------------------|
+| Text and code in one place    | Some technical knowledge is needed |
+| Results can be updated        | Code errors can stop rendering     |
+| Easier to follow the analysis | Software and packages are required |
+| Different output formats      | Initial setup takes time           |
+
+Quarto supports reproducible work, but it does not guarantee reproducibility by itself.
+
+(Rodrigues, 2023; The Carpentries, 2025)
+
+::: notes
+In my opinion, one of the biggest advantages is that everything is in one place.
+
+It is easier to understand what the code does and how the results were produced.
+
+However, Quarto also has limitations. Users need to understand some basic programming concepts. If the code contains an error, rendering may fail.
+:::
+
+## Short exercise for the class
+
+### Try it yourself
+
+Imagine these are the study hours of five students:
+
+```{r}
+study_hours <- c(3, 5, 6, 7, 9)
+```
+
+**Your task:**
+
+- Create a variable called `average_hours`.
+- Use the `mean()` function.
+- Display the result.
+- Change one value and calculate the new average.
+
+**Question:** What happens to the average when one value changes?
+
+::: notes
+Now I have a small exercise for you.
+
+You have five values representing study hours. Please calculate the average using the mean function.
+
+Then change one of the values and calculate the average again.
+
+Think about why the result changes. This is a simple example of how executable code works in a Quarto document.
+:::
+
+## Exercise One possible solution
+
+```{r}
+study_hours <- c(3, 5, 6, 7, 9)
+
+average_hours <- mean(study_hours)
+
+average_hours
+```
+
+The result is **6 hours**.
+
+If we change one of the values, the average changes too.
+
+::: notes
+One possible solution is to create the average_hours variable and use mean.
+
+The result is six. If we change one value, the result is calculated again. This is the basic idea behind executable code in Quarto.
+:::
+
+## Conclusion
+
+Literate programming connects code with explanations.
+
+Quarto makes it possible to put text, code and results into one document.
+
+This can help us:
+
+- Understand data analysis more easily
+- Document our work
+- Update results
+- Share our analysis with others
+
+**Thank you for listening!**
+
+::: notes
+To conclude, literate programming helps us explain code instead of only writing instructions for a computer.
+
+Quarto gives us a practical way to combine text, code and results. This can make our work easier to understand and share.
+
+Thank you for listening.
+:::
+
+## References
+
+@book{rodrigues2023, author = {Rodrigues, Bruno}, title = {Building Reproducible Analytical Pipelines with R}, year = {2023}, url = {<https://raps-with-r.dev/%7D> }
+
+@online{carpentries2025, author = {{The Carpentries Incubator}}, title = {Reproducible Publications with Quarto}, year = {2025}, url = {<https://carpentries-incubator.github.io/reproducible-publications-quarto/aio.html%7D> }
+
+@article{knuth1984, author = {Knuth, Donald E.}, title = {Literate Programming}, journal = {The Computer Journal}, volume = {27}, number = {2}, pages = {97--111}, year = {1984}, doi = {10.1093/comjnl/27.2.97} }
+
+@online{quartoDocs, author = {{Quarto Development Team}}, title = {Quarto Documentation}, url = {<https://quarto.org/docs/%7D> }

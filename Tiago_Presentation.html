@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="Tiago_Presentation_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Tiago_Presentation_files/libs/quarto-html/tabby.min.js"></script>
+<script src="Tiago_Presentation_files/libs/quarto-html/popper.min.js"></script>
+<script src="Tiago_Presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="Tiago_Presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Tiago_Presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="Tiago_Presentation_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
+
+  <meta name="author" content="Tiago José Camelo Moura">
+  <meta name="dcterms.date" content="2026-11-18">
+  <title>Literate Programming with Quarto</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="Tiago_Presentation_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="Tiago_Presentation_files/libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="Tiago_Presentation_files/libs/revealjs/dist/theme/quarto-0427d8d92a431aa6a6430e53ec02a470.css">
+  <link href="Tiago_Presentation_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="Tiago_Presentation_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="Tiago_Presentation_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="Tiago_Presentation_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Literate Programming with Quarto</h1>
+  <p class="subtitle">Combining text, code and results</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Tiago José Camelo Moura 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-11-18</p>
+</section>
+<section id="introduction" class="slide level2">
+<h2>Introduction</h2>
+<h3 id="why-does-documentation-matter">Why does documentation matter?</h3>
+<p>When we work with data, we do more than calculate numbers.</p>
+<p>We also need to explain:</p>
+<ul>
+<li>What we did</li>
+<li>Why we did it</li>
+<li>How we got the results</li>
+</ul>
+<p>Code and explanations should be easy to follow.</p>
+<aside class="notes">
+<p>Hello everyone. Today I want to talk about literate programming and how we can use Quarto.</p>
+<p>When we work with data, it is not enough to calculate a result. We should also explain how we got it. This is important because other people may want to understand or check our work.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="the-problem" class="slide level2">
+<h2>The problem</h2>
+<h3 id="code-and-explanations-are-often-separated">Code and explanations are often separated</h3>
+<p>Imagine working on a data analysis.</p>
+<ul>
+<li>You write your code in RStudio.</li>
+<li>You get some results.</li>
+<li>You copy the results into a Word document.</li>
+<li>You write your explanation separately.</li>
+</ul>
+<p>If you change the code later, you may also have to update the results in your document.</p>
+<p>This can make the process confusing and time-consuming (Rodrigues, 2023).</p>
+<aside class="notes">
+<p>Think about a normal data analysis project. We often have one file for the code and another file for the report.</p>
+<p>The problem is that the results in the report do not always change automatically when we update the code. This is one reason why combining code and explanations can be useful.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="what-is-literate-programming" class="slide level2">
+<h2>What is Literate Programming?</h2>
+<p>Literate programming combines:</p>
+<ul>
+<li>Programming code</li>
+<li>Explanatory text</li>
+<li>Results of the code</li>
+</ul>
+<p>The code tells the computer what to do.</p>
+<p>The text helps people understand what is happening.</p>
+<p>The main idea is to make code easier to read and understand (Knuth, 1984; Rodrigues, 2023).</p>
+<aside class="notes">
+<p>Literate programming is not just about writing code. It is also about explaining the code.</p>
+<p>The computer needs instructions, but people need explanations. With literate programming, both are part of the same document.</p>
+<p>Donald Knuth introduced the concept in 1984.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="why-is-reproducibility-important" class="slide level2">
+<h2>Why is reproducibility important?</h2>
+<p>In research and data analysis, other people should be able to follow the work.</p>
+<p>This means they should be able to understand:</p>
+<ul>
+<li>Which data were used</li>
+<li>Which steps were taken</li>
+<li>Which code was used</li>
+<li>How the results were produced</li>
+</ul>
+<p>Good documentation makes an analysis easier to check and repeat (Rodrigues, 2023; The Carpentries, 2025).</p>
+<aside class="notes">
+<p>Reproducibility is an important part of data analysis.</p>
+<p>For example, if another student wants to understand my results, they should be able to see what I did and which code I used.</p>
+<p>This does not mean that every analysis will automatically give the same result in every situation. The data, software and working environment also matter.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="what-is-quarto" class="slide level2">
+<h2>What is Quarto?</h2>
+<p>Quarto is an open source publishing system.</p>
+<p>It allows us to combine:</p>
+<ul>
+<li>Normal text</li>
+<li>Programming code</li>
+<li>Results and visualisations</li>
+</ul>
+<p>We can use it to create documents and presentations in formats such as HTML and PDF.</p>
+<p>It works with languages such as R and Python (Quarto Development Team, n.d.; The Carpentries, 2025).</p>
+<aside class="notes">
+<p>Quarto is a tool that helps us put this idea into practice.</p>
+<p>We can write normal text, add code and show the results in one document. Quarto can then turn this document into different formats.</p>
+<p>For example, we can create an HTML document or a PDF.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="how-does-a-quarto-document-work" class="slide level2">
+<h2>How does a Quarto document work?</h2>
+<p>A Quarto document usually contains three main parts.</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Part</th>
+<th>What does it do?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>YAML</td>
+<td>Contains document settings</td>
+</tr>
+<tr class="even">
+<td>Markdown</td>
+<td>Contains text and headings</td>
+</tr>
+<tr class="odd">
+<td>Code chunks</td>
+<td>Contain executable code</td>
+</tr>
+</tbody>
+</table>
+<p>The file has the extension <code>.qmd</code>.</p>
+<p>(The Carpentries, 2025)</p>
+<aside class="notes">
+<p>A Quarto document is saved as a QMD file.</p>
+<p>There are three important parts. YAML is at the top and contains settings like the title and author. Markdown is used for normal text and headings. Code chunks contain code that Quarto can execute.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="a-small-r-example" class="slide level2">
+<h2>A small R example</h2>
+<p>Imagine we want to calculate the average number of hours that students studied.</p>
+<p>We have five values:</p>
+<p>The values are stored in a variable called <code>study_hours</code>.</p>
+<aside class="notes">
+<p>Here is a small example using R.</p>
+<p>I have five values. Each value represents the number of hours a student studied. First, I store these values in a variable called study_hours.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="calculating-the-average" class="slide level2">
+<h2>Calculating the average</h2>
+<p>We can use the <code>mean()</code> function in R.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
+</div>
+</div>
+<p>The average is <strong>6 hours</strong>.</p>
+<aside class="notes">
+<p>Now I use the mean function. Mean calculates the average of the values.</p>
+<p>The result is six hours. Quarto executes the code and displays the result in the document. If I change the values and render the document again, the calculation is updated.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="what-are-code-chunks" class="slide level2">
+<h2>What are code chunks?</h2>
+<p>Code chunks are sections in a Quarto document where we can write and execute code.</p>
+<p>For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href=""></a></span>
+<span id="cb2-2"><a href=""></a>::: {.cell}</span>
+<span id="cb2-3"><a href=""></a>::: {.cell-output .cell-output-stdout}</span>
+<span id="cb2-4"><a href=""></a></span>
+<span id="cb2-5"><a href=""></a><span class="in">```</span></span>
+<span id="cb2-6"><a href=""></a><span class="in">[1] 4</span></span>
+<span id="cb2-7"><a href=""></a><span class="in">```</span></span>
+<span id="cb2-8"><a href=""></a></span>
+<span id="cb2-9"><a href=""></a></span>
+<span id="cb2-10"><a href=""></a>:::</span>
+<span id="cb2-11"><a href=""></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We can also control how the code is displayed.</p>
+<ul>
+<li><code>echo: true</code> shows the code.</li>
+<li><code>echo: false</code> hides the code.</li>
+<li><code>eval: false</code> prevents the code from running.</li>
+</ul>
+<p>(The Carpentries, 2025)</p>
+<aside class="notes">
+<p>Code chunks are an important part of Quarto.</p>
+<p>They allow us to include R code directly in the document. We can decide if the code should be visible or hidden.</p>
+<p>For a presentation, showing the code can be useful because the audience can see how the result was calculated.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="what-happens-when-we-render" class="slide level2">
+<h2>What happens when we render?</h2>
+<p>The <code>.qmd</code> file is the source document.</p>
+<p>When we render it, Quarto processes the text and executes the code chunks.</p>
+<p>The result can be an HTML document or another supported output format.</p>
+<p>This means that the text, code and results stay connected (Quarto Development Team, n.d.).</p>
+<aside class="notes">
+<p>Rendering means creating the final document from the QMD file.</p>
+<p>Quarto reads the document, processes the text and runs the code chunks. It then creates the output.</p>
+<p>This is useful because we do not have to copy every result manually into another document.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="advantages-and-limitations" class="slide level2">
+<h2>Advantages and limitations</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Advantages</th>
+<th>Limitations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Text and code in one place</td>
+<td>Some technical knowledge is needed</td>
+</tr>
+<tr class="even">
+<td>Results can be updated</td>
+<td>Code errors can stop rendering</td>
+</tr>
+<tr class="odd">
+<td>Easier to follow the analysis</td>
+<td>Software and packages are required</td>
+</tr>
+<tr class="even">
+<td>Different output formats</td>
+<td>Initial setup takes time</td>
+</tr>
+</tbody>
+</table>
+<p>Quarto supports reproducible work, but it does not guarantee reproducibility by itself.</p>
+<p>(Rodrigues, 2023; The Carpentries, 2025)</p>
+<aside class="notes">
+<p>In my opinion, one of the biggest advantages is that everything is in one place.</p>
+<p>It is easier to understand what the code does and how the results were produced.</p>
+<p>However, Quarto also has limitations. Users need to understand some basic programming concepts. If the code contains an error, rendering may fail.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="short-exercise-for-the-class" class="slide level2">
+<h2>Short exercise for the class</h2>
+<h3 id="try-it-yourself">Try it yourself</h3>
+<p>Imagine these are the study hours of five students:</p>
+<p><strong>Your task:</strong></p>
+<ul>
+<li>Create a variable called <code>average_hours</code>.</li>
+<li>Use the <code>mean()</code> function.</li>
+<li>Display the result.</li>
+<li>Change one value and calculate the new average.</li>
+</ul>
+<p><strong>Question:</strong> What happens to the average when one value changes?</p>
+<aside class="notes">
+<p>Now I have a small exercise for you.</p>
+<p>You have five values representing study hours. Please calculate the average using the mean function.</p>
+<p>Then change one of the values and calculate the average again.</p>
+<p>Think about why the result changes. This is a simple example of how executable code works in a Quarto document.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="exercise-one-possible-solution" class="slide level2">
+<h2>Exercise One possible solution</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
+</div>
+</div>
+<p>The result is <strong>6 hours</strong>.</p>
+<p>If we change one of the values, the average changes too.</p>
+<aside class="notes">
+<p>One possible solution is to create the average_hours variable and use mean.</p>
+<p>The result is six. If we change one value, the result is calculated again. This is the basic idea behind executable code in Quarto.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="conclusion" class="slide level2">
+<h2>Conclusion</h2>
+<p>Literate programming connects code with explanations.</p>
+<p>Quarto makes it possible to put text, code and results into one document.</p>
+<p>This can help us:</p>
+<ul>
+<li>Understand data analysis more easily</li>
+<li>Document our work</li>
+<li>Update results</li>
+<li>Share our analysis with others</li>
+</ul>
+<p><strong>Thank you for listening!</strong></p>
+<aside class="notes">
+<p>To conclude, literate programming helps us explain code instead of only writing instructions for a computer.</p>
+<p>Quarto gives us a practical way to combine text, code and results. This can make our work easier to understand and share.</p>
+<p>Thank you for listening.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="references" class="slide level2">
+<h2>References</h2>
+<p><span class="citation" data-cites="book">(<a href="" role="doc-biblioref" onclick="return false;"><strong>book?</strong></a>)</span>{rodrigues2023, author = {Rodrigues, Bruno}, title = {Building Reproducible Analytical Pipelines with R}, year = {2023}, url = {<a href="https://raps-with-r.dev/%7D" class="uri">https://raps-with-r.dev/%7D</a> }</p>
+<p><span class="citation" data-cites="online">(<a href="" role="doc-biblioref" onclick="return false;"><strong>online?</strong></a>)</span>{carpentries2025, author = {{The Carpentries Incubator}}, title = {Reproducible Publications with Quarto}, year = {2025}, url = {<a href="https://carpentries-incubator.github.io/reproducible-publications-quarto/aio.html%7D" class="uri">https://carpentries-incubator.github.io/reproducible-publications-quarto/aio.html%7D</a> }</p>
+<p><span class="citation" data-cites="article">(<a href="" role="doc-biblioref" onclick="return false;"><strong>article?</strong></a>)</span>{knuth1984, author = {Knuth, Donald E.}, title = {Literate Programming}, journal = {The Computer Journal}, volume = {27}, number = {2}, pages = {97–111}, year = {1984}, doi = {10.1093/comjnl/27.2.97} }</p>
+<p><span class="citation" data-cites="online">(<a href="" role="doc-biblioref" onclick="return false;"><strong>online?</strong></a>)</span>{quartoDocs, author = {{Quarto Development Team}}, title = {Quarto Documentation}, url = {<a href="https://quarto.org/docs/%7D" class="uri">https://quarto.org/docs/%7D</a> }</p>
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="Tiago_Presentation_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="Tiago_Presentation_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="Tiago_Presentation_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="Tiago_Presentation_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="Tiago_Presentation_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="Tiago_Presentation_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="Tiago_Presentation_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="Tiago_Presentation_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="Tiago_Presentation_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="Tiago_Presentation_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 720,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
