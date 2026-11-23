@@ -1,0 +1,58 @@
+---
+title: "Class Exercise: Customer Churn and Revenue Risk"
+subtitle: "A 20-minute Quarto and R activity"
+author: "DADM"
+lang: en
+bibliography: ../references.bib
+csl: ../apa.csl
+format:
+  html:
+    embed-resources: true
+    toc: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Scenario
+
+A telecommunications company has supplied a **simulated** customer file. Your team has 20 minutes to compare churn by contract type and recommend one careful next step. No row describes a real person.
+
+Open the project folder in RStudio. The CSV is `data/customer_churn_simulated.csv`; the worked analysis is `analysis/churn_analysis.qmd`.
+
+## Tasks
+
+1. Render `analysis/churn_analysis.qmd` and locate the data inspection and missing-charge count.
+2. In your own words, explain how the contract-specific median fills a missing monthly charge.
+3. Use the contract summary to identify the highest churn rate. State its denominator and sample size.
+4. Compare churn rate with `observed_churned_mrr`. Which contract has the largest observed monthly revenue associated with churn?
+5. Explain why the result does not show that contract type caused cancellation.
+6. Suggest one real-world follow-up measure or experiment before changing retention policy.
+7. The two-year churn rate is higher than the one-year rate. Compare the two denominators and explain why this ordering is weak evidence. Optional: run `prop.test(10, 97)` and `prop.test(12, 173)` and compare the confidence intervals.
+
+## Optional coding task
+
+Add this summary below the existing segment summaries in the analysis source and render again:
+
+```r
+customers |>
+  group_by(tenure_band) |>
+  summarise(customers = n(),
+            churn_rate = mean(churn_flag),
+            .groups = "drop")
+```
+
+Explain why the customer count belongs beside the rate.
+
+## Rendering instructions
+
+In RStudio, open the project, open the analysis source, and press **Render**. Or open a terminal in the project folder and run:
+
+`quarto render analysis/churn_analysis.qmd`
+
+The first render requires the R packages listed in `README.md`.
+
+## Instructor reference
+
+See `exercise/INSTRUCTOR-REFERENCE.md` for a worked interpretation. The file is separate from these student tasks. All results describe the simulated sample only.

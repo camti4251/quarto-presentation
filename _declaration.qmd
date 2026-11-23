@@ -1,0 +1,26 @@
+I hereby affirm that I, Tiago José Camelo Moura, prepared the submitted work for the course *Data Analysis for Decision-Making* (Hochschule Fresenius, Prof. Dr. Stephan Huber) under my own responsibility. The submitted work consists of the presentation (`Tiago_Presentation.qmd`, `.html`, `.pdf`), this handout (`Handout_Quarto.qmd`, `.html`, `.pdf`), the class exercise (`exercise/`), the worked analysis (`analysis/churn_analysis.qmd`) and the R script that generates the data set. No sources other than those in the reference list were used. Parts of this work, including tables and figures, that have been taken either verbatim or analogously from other works have in each case been properly cited with regard to their origin and authorship. This work, either in parts or in its entirety, be it in the same or similar form, has not been submitted to any other examination board and has not been published, apart from the publication on GitHub that the course guidelines require.
+
+**Data.** The customer data analysed in this work are synthetic. They were generated with the included R script `data/generate_simulated_data.R` (fixed random seed 20261122) in order to illustrate the analytical workflow. They are labelled as simulated throughout and do not describe real customers or a real company. No real data have been made up or falsified. I agree to provide the lecturer upon request with the data, the generating script and the analysis code until five years after the submission of this work.
+
+**Software.** The analysis and the documents were produced with R, RStudio, Quarto, the R packages readr, dplyr, ggplot2, scales and knitr, a LaTeX distribution for the PDF output, and Git/GitHub for version control and publication.
+
+**Use of generative AI.** I used generative AI tools as aids during the preparation and revision of this work: OpenAI ChatGPT (including Codex) to review the public course instructions, to draft and revise explanatory text, to write and edit the Quarto and R source files, and to render and inspect the documents; and Anthropic Claude to check the materials against the course requirements, to correct citation and formatting errors, and to draft this declaration. AI tools are not cited as sources, and the content of this work does not rely on statements by AI tools that I have not checked against the cited literature or the official documentation.
+
+**Verification and responsibility.** I have read and checked all AI-assisted text and code, compared the cited sources with the original publications, rerun the analysis from the project folder, and checked that the reported results and interpretations match the rendered output. I can explain the code, the analytical decisions and the conclusions of this work. I take full responsibility for its content, including any errors.
+
+::: {.content-visible when-format="pdf"}
+```{=latex}
+\vspace{1.5cm}
+\noindent\rule{6cm}{0.4pt}\hfill\rule{6cm}{0.4pt}\\
+Location, Date\hfill Signature
+```
+:::
+
+::: {.content-visible when-format="html"}
+<br><br>
+
+| | |
+|:---------------------------------|:---------------------------------|
+| \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ | \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ |
+| Location, Date | Signature |
+:::

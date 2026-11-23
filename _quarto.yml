@@ -1,0 +1,13 @@
+project:
+  type: default
+  execute-dir: project
+  render:
+    - Tiago_Presentation.qmd
+    - Handout_Quarto.qmd
+    - Declaration.qmd
+    - analysis/churn_analysis.qmd
+    - exercise/Churn_Exercise.qmd
+execute:
+  freeze: auto
+  warning: false
+  message: false

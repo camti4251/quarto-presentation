@@ -1,231 +1,158 @@
-------------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
 ---
 title: "Literate Programming with Quarto"
-subtitle: "Working with text, code and results in one document"
+subtitle: "From data analysis to reproducible publications"
 author: "Tiago José Camelo Moura"
-date: "18 November 2026"
-
+date: "2026-11-18"
+date-format: long
+lang: en
+bibliography: references.bib
+csl: apa.csl
+number-sections: true
 format:
   pdf:
-    pdf-engine: pdflatex
     documentclass: article
+    author: '`Tiago José Camelo Moura\\[4pt] \small Data Analysis for Decision-Making · Prof. Dr. Stephan Huber\\ \small Hochschule Fresenius Köln · Winter term 2026/27`{=latex}'
     papersize: a4
-    fontsize: 10pt
+    fontsize: 11pt
     geometry:
-      - margin=2.5cm
+      - top=30mm
+      - bottom=30mm
+      - left=20mm
+      - right=20mm
+    pdf-engine: xelatex
+    output-file: Handout_Quarto.pdf
   html:
+    embed-resources: true
     toc: true
+    subtitle: 'From data analysis to reproducible publications<br><small>Data Analysis for Decision-Making · Prof. Dr. Stephan Huber · Hochschule Fresenius Köln · Winter term 2026/27</small>'
+    number-sections: true
+    output-file: Handout_Quarto.html
+execute:
+  echo: true
+  warning: false
+  message: false
+---
 
-number-sections: true
+# Purpose and central argument
+
+Data analysis is not complete when a number has been calculated. A reader also needs to know which data were used, how they were transformed, why analytical choices were made, and what the result can support. When code, output, and explanation live in separate files, changes can leave a report displaying outdated values. Literate programming addresses this coordination problem by treating a program as something written for people as well as machines [@knuth1984]. In contemporary analysis, an executable document can place narrative, code, and results together.
+
+This handout explains how Quarto implements that workflow and illustrates it with a simulated customer-churn analysis. Reproducible-paper workflows written with RStudio and Quarto provide a practical model for connecting method and narrative [@bauer2023]. The argument is deliberately limited: an executable document improves traceability, but it does not make weak data or unjustified conclusions reliable. Reproducibility requires the data, code, assumptions, software context, and interpretation to be sufficiently documented [@peng2009; @gandrud2020].
+
+# Quarto as an analytical publishing workflow
+
+A Quarto source file (`.qmd`) combines a YAML front matter block, Markdown, and optional executable code cells. YAML specifies document-wide metadata and output settings. Markdown structures prose with headings, lists, links, and tables. An R cell is fenced with `{r}` and can include options such as `echo: true` to show code or `eval: false` to skip execution. These are presentation and execution controls; hiding code does not remove it from the source.
+
+Quarto is a publishing system, not a statistical package. During rendering, Quarto processes the source and coordinates execution through an engine; for R, a common engine is knitr. R performs the calculations, while Quarto converts the combined content to formats such as HTML, PDF, or slides [@quarto]. RStudio is an integrated development environment that helps a writer edit the source, run code, inspect files, and invoke rendering. The same project can also be rendered from a terminal, so the IDE is useful but not a requirement.
+
+A minimal header illustrates configuration:
+
+```yaml
+---
+title: "Customer churn"
+format: html
 bibliography: references.bib
 csl: apa.csl
 ---
+```
 
-\begin{titlepage}
-\centering
+The source below the header can contain an executable R chunk. When the document is rendered, its output is recalculated from current inputs. Rendering is therefore a build step, not a guarantee: users should check that code ran, paths resolved, citations appeared, and the layout is readable. PDF generation additionally depends on a LaTeX engine and suitable fonts and packages.
 
-\vspace*{2cm}
+Quarto uses Pandoc citation syntax with a BibTeX database and a Citation Style Language file. For example, `[@knuth1984]` produces an in-text citation, and the bibliography is generated from cited keys rather than typed into the document. Here `references.bib` stores source metadata and `apa.csl` supplies APA 7 formatting. Automation reduces repetitive formatting errors but cannot validate whether an author, date, DOI, or interpretation is correct; bibliographic metadata still requires checking [@hubercourse].
 
-{\Large Hochschule Fresenius}
+# Reproducibility and project practice
 
-\vspace{0.5cm}
+An executable report links a result to the steps that created it. This makes changes easier to review and can reduce transcription errors. A project should nevertheless preserve inputs, document data provenance and cleaning rules, use relative file paths, record software and package requirements, and avoid relying on a hidden interactive session. Version control makes edits and their history inspectable; it does not freeze an environment or make private inputs available to another reader. Reproducibility also differs from replication with new data: rerunning the same workflow checks computational consistency, whereas a new dataset or study asks whether findings extend beyond the original inputs [@peng2009; @gandrud2020].
 
+This project keeps its generated CSV, deterministic R data-generation script, analysis source, exercise, bibliography, CSL, and rendered files in a clear folder structure. The example is explicitly simulated. Its data-generating rules are transparent and repeatable, but its outputs are teaching material rather than evidence about real telecommunications customers.
 
+# Customer churn and revenue risk example
 
+The business question is which customer segments show higher cancellation rates and which represent greater recurring-revenue exposure. One row represents a subscriber. Fields include contract type, tenure, support-contact count, monthly charge, and churn status. The R workflow imports the CSV with `readr`, inspects dimensions and missingness, standardizes categories, imputes missing monthly charges using the median within contract type, and records the imputation count. It then creates tenure bands and a binary churn flag. A grouped `dplyr` summary calculates segment sizes, churn rates, and the monthly charges belonging to churned accounts; `ggplot2` charts rates and revenue. These package roles are part of the broader tidyverse ecosystem [@wickham2019].
 
-
-\vspace{2cm}
-
-{\large Handout}
-
-\vspace{2cm}
-
-\begin{flushleft}
-\textbf{Student:} Tiago José Camelo Moura
-
-\vspace{0.4cm}
-
-\textbf{E-Mail:} moura.tiago@stud.hs-fresenius.de
-
-\vspace{0.4cm}
-
-\textbf{Matrikelnummer:} 401518481
-
-\vspace{0.4cm}
-
-\textbf{Course:} Data Analysis for Decision-Making
-
-\vspace{0.4cm}
-
-\textbf{Date:} 18 November 2026
-\end{flushleft}
-
-\vfill
-
-\end{titlepage}
-
-\newpage
-
-# Introduction
-
-In many areas of data analysis, it is important not only to calculate results but also to explain how these results were produced. When working with data, researchers and analysts often use programming languages such as R to organise information, perform calculations and create visualisations. However, the code and the written explanation are sometimes saved in separate files.
-
-This can make it difficult to understand how a result was created, especially when another person wants to check or repeat the analysis. Literate programming offers a way to solve this problem. It combines programming code, explanations and results in one document.
-
-This handout introduces the basic idea of literate programming and explains how Quarto can be used to create reproducible documents. It also includes simple R examples that show how code and written explanations work together.
-
-# Literate Programming and Reproducibility
-
-The term *literate programming* was introduced by Donald Knuth in 1984. His idea was that a computer program should not only be written for a computer but should also be understandable for people. Instead of treating documentation as something separate, explanations become part of the programming process
-
-|     |                |
-|-----|----------------|
-|     | `[@knuth1984]` |
-
-This approach is useful because code can be difficult to understand without context. For example, a person might see a calculation in R but not know why a certain variable was selected or what the result means. By adding explanations directly next to the code, the analysis becomes easier to follow.
-
-Another important concept is reproducibility. A result is reproducible when another person can use the same data, code and instructions to repeat the analysis and obtain the same result. This is especially relevant in research and data analysis because results should be transparent and verifiable.
-
-Literate programming supports reproducibility by keeping the explanation and the code together. If the code changes, the document can be rendered again so that the results are updated as well.
-
-# Getting to Know Quarto
-
-Quarto is an open-source publishing system that allows users to create documents containing text, code and results. It works with different programming languages, including R and Python. The same source document can be used to produce different output formats, for example HTML websites, PDF documents and presentations
-
-|     |                 |
-|-----|-----------------|
-|     | `[@quartoDocs]` |
-
-Quarto document usually has the file extension `.qmd`. It contains three main elements:
-
-**YAML:** Information about the document, such as its title, author and output format.
-
-**Markdown:** Normal text, headings, links and explanations.
-
-**Code chunks:** Sections in which programming code can be written and executed.
-
-The combination of these elements makes Quarto useful for reports, academic assignments and data analysis projects.
-
-For example, a student can write an explanation, add R code and display the calculated result in the same document. There is no need to copy results manually from R into a separate text file.
-
-# Working with Code Chunks
-
-Code chunks are one of the most important features of Quarto. They allow users to include executable code directly in a document.
-
-The following example uses a small dataset containing the number of hours that five students spent studying.
+The following executable summary makes the denominator explicit and produces the segment table from the included CSV.
 
 ```{r}
-study_hours <- c(4, 6, 8, 5, 7)
+#| label: tbl-contract-churn
+#| tbl-cap: "Customer counts, churn rates, and observed churned monthly recurring revenue by contract type (simulated data)"
+library(readr)
+library(dplyr)
 
-mean(study_hours)
+raw_customers <- read_csv("data/customer_churn_simulated.csv", show_col_types = FALSE)
+contract_medians <- raw_customers |>
+  group_by(contract) |>
+  summarise(contract_median = median(monthly_charge, na.rm = TRUE), .groups = "drop")
+
+customers <- raw_customers |>
+  left_join(contract_medians, by = "contract") |>
+  mutate(
+    monthly_charge = if_else(is.na(monthly_charge), contract_median, monthly_charge),
+    churn_flag = as.integer(churn == "Yes"),
+    monthly_revenue = monthly_charge
+  )
+
+by_contract <- customers |>
+  group_by(contract) |>
+  summarise(
+    customers = n(),
+    churned = sum(churn_flag),
+    churn_rate = mean(churn_flag),
+    churned_mrr = sum(monthly_revenue[churn_flag == 1]),
+    .groups = "drop"
+  )
+knitr::kable(by_contract, digits = 2,
+             col.names = c("Contract", "Customers", "Churned",
+                           "Churn rate", "Churned MRR (USD)"))
 ```
-
-The first line creates a variable called `study_hours`. The function `c()` combines the five values into a vector. The function `mean()` calculates the average of these values.
-
-The result is 6 hours. Because the code is part of the document, Quarto can calculate the result when the document is rendered.
-
-This is useful because the reader can see both the calculation and the result. It is also possible to change the values and render the document again. The result will then be updated automatically.
-
-## Controlling the Output
-
-Quarto provides different options for controlling how code chunks appear in the final document.
-
-For example, the option `echo: false` hides the code but still displays the result.
 
 ```{r}
-#| echo: false
-
-study_hours <- c(4, 6, 8, 5, 7)
-mean(study_hours)
+#| label: rate-intervals
+#| include: false
+# 95% confidence intervals for two segment rates, used in the text below
+ci_for <- function(k) {
+  row <- by_contract[by_contract$contract == k, ]
+  ci <- prop.test(row$churned, row$customers)$conf.int
+  list(n = row$customers,
+       txt = sprintf("%.0f%% to %.0f%%", 100 * ci[1], 100 * ci[2]))
+}
+ci_two <- ci_for("Two year")
+ci_one <- ci_for("One year")
 ```
 
-Sometimes it is useful to show code without executing it. This can be done with `eval: false`.
 
-```{r}
-#| eval: false
+@tbl-contract-churn reports the segment denominator, churn count, churn rate, and monthly charges associated with churn. `group_by(contract)` defines the segments. Inside `summarise()`, `n()` counts all customers in the segment and the mean of a zero/one flag equals the churn proportion. The monthly charge total answers a separate financial question. Reporting both measures and the group size prevents a rate from being read without its scale.
 
-study_hours <- c(4, 6, 8, 5, 7)
-mean(study_hours)
-```
+In the fixed-seed sample, 72 of 330 month-to-month customers are marked as churned (21.8%); the corresponding rates are 12 of 173 one-year customers (6.9%) and 10 of 97 two-year customers (10.3%). After the documented imputation, the month-to-month group also has the largest observed monthly charge total associated with churn ($4,712). These figures are generated by the included simulation rules and should not be interpreted as evidence about an actual operator. One detail illustrates why group size matters: the two-year rate is higher than the one-year rate, although the generating script assigns two-year contracts a lower churn propensity. With only `r ci_two$n` two-year customers, approximate 95% confidence intervals for the two rates (`r ci_two$txt` and `r ci_one$txt`, computed with `prop.test()`) overlap widely, so the ordering of these two segments is sampling noise rather than a finding.
 
-These options help users decide how much technical detail should be visible to the reader. For an educational document, showing the code can help explain the process. In a report for a general audience, hiding some code may make the document easier to read.
+Missingness deserves its own check. The example deliberately blanks 18 of 600 monthly charges. Filling them with a contract-specific median allows the group revenue summaries to include these rows, but the imputed values are estimates, not recovered bills. A business analysis should examine why charges are missing and test whether missingness differs by churn status or customer segment. If the missingness is systematic, a simple median can bias the comparison; reporting the count and rule makes that limitation visible.
 
-# Creating and Organising a Quarto Project
+The two visual summaries serve different purposes: a bar chart of rates answers which group has the greater proportion, while an exposure chart puts the amount into a business scale. Figures should identify the measure, segment, and unit. Here the prices are simulated USD solely for the example. The scenario estimate multiplies active monthly revenue by the historical segment churn rate, assuming that rate applies to current active customers. It is useful for comparing rough priorities, but it is not a calibrated prediction, lifetime-value calculation, or causal estimate.
 
-A basic Quarto project can contain several files. The main `.qmd` file contains the text and code. Additional files can store references, data or images.
+For segment `g`, the observed churn rate is
 
-A typical project could look like this:
+$$
+\widehat{p}_g = \frac{\text{customers marked churned in }g}{\text{all observed customers in }g}.
+$$
 
-``` text
-my-quarto-project/
-- analysis.qmd
-- references.bib
-- apa.csl
-- data.csv
-```
+The denominator matters: comparing raw churn counts would favor large groups even if their rates were lower. Revenue measures answer a different question. The sum of monthly charges among churned accounts is a descriptive estimate of recurring monthly revenue associated with observed cancellations. It is not necessarily realized accounting loss: billing periods, partial months, discounts, and replacement customers are not modeled.
 
-The file `analysis.qmd` contains the actual document. The file `references.bib` stores bibliographic information. The file `apa.csl` defines the APA citation style. The dataset can be stored separately, for example in a CSV file.
+The example also reports a simple next-period scenario: active monthly revenue in a segment multiplied by its historical segment churn rate. This translates a rate into a rough exposure estimate, but assumes the prior rate applies to active accounts and is not a calibrated forecast. It should be labeled as an illustration and refreshed with a clearly defined time window in real operations.
 
-Keeping the files organised is important, especially when a project becomes larger. It also makes it easier for other people to understand and work with the project.
-
-Quarto documents can be rendered using the Render button in RStudio. It is also possible to render a document directly from R:
-
-```         
-```
-
-Rendering means that Quarto processes the document, executes the code chunks and creates the selected output format. For example, the same document can be rendered as HTML or PDF by changing the output settings in the YAML header.
-
-# Advantages and Limitations
-
-Quarto offers several advantages for academic work and data analysis.
-
-First, it improves transparency. Readers can see which code was used to produce a result. This makes it easier to understand and check the analysis.
-
-Second, it saves time. When data or calculations change, the document can be rendered again. Users do not have to update every result manually.
-
-Third, Quarto supports different output formats. A single source document can be used for a report, a website or a presentation. This is helpful when the same information needs to be shared in different ways.
-
-However, there are also some limitations. Beginners may need time to understand Markdown, YAML and code chunks. Errors in the code can also prevent a document from rendering successfully. In addition, users need to keep their files and software organised so that a project can be reproduced on another computer.
-
-Quarto does not automatically guarantee that an analysis is correct. The quality of the results still depends on the data, the programming code and the decisions made by the person conducting the analysis.
-
-# Why Is Quarto Useful for Data Analysis and Decision Making?
-
-Data analysis is often used to support decisions. For example, a company might analyse customer behaviour, sales figures or employee data before making a business decision.
-
-In these situations, it is important to understand where the results come from. A report that only presents numbers does not always explain how those numbers were calculated.
-
-Quarto can help by combining the analysis with explanations. This allows the reader to follow the steps from the original data to the final result.
-
-For example, a company could calculate the average number of products sold per day and explain whether sales increased or decreased. If the data changes, the code can be executed again and the document can be updated.
-
-Bruno Rodrigues describes the importance of reproducible analytical pipelines, where data processing steps are organised and documented so that an analysis can be repeated and maintained `[@rodrigues2023]`. Quarto can be one part of this workflow because it connects the written report with the underlying code.
-
-The Carpentries guide also explains how Quarto can be used to create reproducible publications by combining narrative text, code and outputs in one document `[@carpentries2025]`
+A decision-maker should compare rate, segment size, and revenue together. A small group can have a high rate but little total exposure; a large group with a moderate rate may have more revenue at stake. The results can support prioritizing further investigation, such as reviewing service complaints or designing a retention experiment. They cannot show that contract type or support contacts caused cancellation. Such claims require a credible research design and evidence addressing confounding and selection. If an intervention is proposed, a controlled test with a defined outcome is more informative than treating descriptive associations as causal effects.
 
 # Conclusion
 
-Literate programming connects programming code with explanations and results. The main idea is to make technical work easier to understand, check and reproduce.
+Quarto makes it practical to keep analysis, explanation, and publication in one version-controlled project. YAML configures the document, Markdown communicates the reasoning, R cells compute results, and a bibliography plus CSL automates citation formatting. This workflow supports transparent review when inputs and decisions are documented. It does not replace subject knowledge, data validation, or critical interpretation. In the churn example, the most defensible output is a transparent description of simulated segment differences and a cautious proposal for what to test next.
 
-Quarto provides a practical way to apply this approach. It allows users to write text, include executable code and create different output formats from one source document.
+\clearpage
 
-For students, this can be especially useful when preparing academic reports or working with data. Instead of presenting only the final numbers, they can also explain how the results were produced.
+# References {.unnumbered}
 
-Quarto does not replace careful data analysis or good programming practices. However, it provides a useful structure for making analytical work more transparent and understandable.
+::: {#refs}
+:::
 
-## **References**
+\clearpage
 
-Carpentries Incubator. (2025). *Reproducible publications with Quarto*. [https://carpentries-incubator.github.io/reproducible-publications-quarto/aio.html](https://carpentries-incubator.github.io/reproducible-publications-quarto/aio.html?utm_source=chatgpt.com)
+# Affidavit {.unnumbered}
 
-Knuth, D. E. (1984). Literate programming. *The Computer Journal, 27*(2), 97–111. [https://doi.org/10.1093/comjnl/27.2.97](https://doi.org/10.1093/comjnl/27.2.97?utm_source=chatgpt.com)
-
-Quarto Development Team. (n.d.). *Quarto documentation*. [https://quarto.org/docs/](https://quarto.org/docs/?utm_source=chatgpt.com)
-
-Rodrigues, B. (2023). *Building reproducible analytical pipelines with R*. [https://raps-with-r.dev/](https://raps-with-r.dev/?utm_source=chatgpt.com)
-
-# **Declaration**
-
-I hereby declare that I have prepared this handout independently and have used only the sources and tools indicated in the document. All sources used have been acknowledged in the reference list.
+{{< include _declaration.qmd >}}

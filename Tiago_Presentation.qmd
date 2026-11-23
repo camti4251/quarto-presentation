@@ -1,335 +1,341 @@
-
 ---
 title: "Literate Programming with Quarto"
-subtitle: "Combining text, code and results"
+subtitle: "From data analysis to reproducible publications"
 author: "Tiago José Camelo Moura"
-date: "November 18, 2026"
-
+institute: "Data Analysis for Decision-Making · Prof. Dr. Stephan Huber · Hochschule Fresenius Köln · Winter term 2026/27"
+date: "2026-11-18"
+date-format: long
+lang: en
+bibliography: references.bib
+csl: apa.csl
 format:
   revealjs:
+    embed-resources: true
     theme: simple
-    slide-number: true
-    transition: none
+    slide-number: c/t
     progress: true
+    transition: none
     center: false
     width: 1280
     height: 720
     navigation-mode: linear
-
-bibliography: references.bib
-csl: apa.csl
-lang: en
+    output-file: Tiago_Presentation.html
+  beamer:
+    aspectratio: 169
+    pdf-engine: xelatex
+    output-file: Tiago_Presentation.pdf
+execute:
+  echo: true
+  warning: false
+  message: false
 ---
 
+## The question behind the tools
 
+**How can a reader trace a business conclusion back to the data and code that produced it?**
 
-## Introduction 
-
-### Why does documentation matter?
-
-When we work with data, we do more than calculate numbers.
-
-We also need to explain:
-
-- What we did
-- Why we did it
-- How we got the results
-
-Code and explanations should be easy to follow.
+Literate programming connects the explanation, instructions, and computed outputs in one readable source.
 
 ::: notes
-Hello everyone. Today I want to talk about literate programming and how we can use Quarto.
-
-When we work with data, it is not enough to calculate a result. We should also explain how we got it. This is important because other people may want to understand or check our work.
+[30 sec] Open with a churn rate on a slide: it is not enough by itself; we also need to explain its denominator, data, and calculation.
 :::
 
-## The problem
+## Why reproducibility matters
 
-### Code and explanations are often separated
+A result is easier to check when the data, transformations, code, software context, and interpretation are documented together.
 
-Imagine working on a data analysis.
+- Copied results can become stale after code changes.
+- Undocumented cleaning decisions are hard to audit.
+- Reproduction requires access to the inputs and a sufficiently specified workflow.
 
-- You write your code in RStudio.
-- You get some results.
-- You copy the results into a Word document.
-- You write your explanation separately.
-
-If you change the code later, you may also have to update the results in your document.
-
-This can make the process confusing and time-consuming (Rodrigues, 2023).
+A rendered report alone is not the whole research record [@peng2009; @gandrud2020].
 
 ::: notes
-Think about a normal data analysis project. We often have one file for the code and another file for the report.
-
-The problem is that the results in the report do not always change automatically when we update the code. This is one reason why combining code and explanations can be useful.
+[40 sec] Re-running code can reproduce an output given the same inputs and compatible environment; it cannot guarantee valid data or correct reasoning.
 :::
 
-## What is Literate Programming?
+## Literate programming: the core idea
 
-Literate programming combines:
+Donald Knuth described programming as a form of writing for human readers as well as computers [@knuth1984].
 
-- Programming code
-- Explanatory text
-- Results of the code
+**In a data report:** narrative explains decisions; code makes calculations explicit; output shows what that code produced.
 
-The code tells the computer what to do.
-
-The text helps people understand what is happening.
-
-The main idea is to make code easier to read and understand (Knuth, 1984; Rodrigues, 2023).
+The reader can move from question → method → result → interpretation without switching between disconnected files.
 
 ::: notes
-Literate programming is not just about writing code. It is also about explaining the code.
-
-The computer needs instructions, but people need explanations. With literate programming, both are part of the same document.
-
-Donald Knuth introduced the concept in 1984.
+[40 sec] The idea predates Quarto. Quarto is one modern publishing system that supports this style; it did not invent literate programming.
 :::
 
-## Why is reproducibility important?
+## What Quarto does
 
-In research and data analysis, other people should be able to follow the work.
+Quarto is an open-source publishing system. It reads a `.qmd` source and coordinates:
 
-This means they should be able to understand:
+1. Markdown and document metadata
+2. Execution of supported code cells (R commonly runs through knitr)
+3. Conversion to HTML, PDF, or other publication formats [@quarto]
 
-- Which data were used
-- Which steps were taken
-- Which code was used
-- How the results were produced
-
-Good documentation makes an analysis easier to check and repeat (Rodrigues, 2023; The Carpentries, 2025).
+**Quarto orchestrates the document; R performs R calculations.**
 
 ::: notes
-Reproducibility is an important part of data analysis.
-
-For example, if another student wants to understand my results, they should be able to see what I did and which code I used.
-
-This does not mean that every analysis will automatically give the same result in every situation. The data, software and working environment also matter.
+[45 sec] Quarto is not a statistical method. The Quarto CLI is the publishing system; the R package `quarto` offers helper functions.
 :::
 
-## What is Quarto?
+## Quarto and RStudio have different jobs
 
-Quarto is an open source publishing system.
+| Tool | Role in this workflow |
+|------|-------------------------------------------|
+| R | Reads, transforms, summarises and plots data |
+| Quarto | Renders `.qmd` sources into documents |
+| RStudio | IDE: edit, run, preview, manage the project |
 
-It allows us to combine:
-
-- Normal text
-- Programming code
-- Results and visualisations
-
-We can use it to create documents and presentations in formats such as HTML and PDF.
-
-It works with languages such as R and Python (Quarto Development Team, n.d.; The Carpentries, 2025).
+RStudio can call Quarto’s renderer, but project files can also be rendered from a terminal [@quarto].
 
 ::: notes
-Quarto is a tool that helps us put this idea into practice.
-
-We can write normal text, add code and show the results in one document. Quarto can then turn this document into different formats.
-
-For example, we can create an HTML document or a PDF.
+[40 sec] RStudio is not required for Quarto, and it does not itself calculate R chunks. It provides an integrated interface.
 :::
 
-## How does a Quarto document work?
+## Anatomy of a `.qmd`
 
-A Quarto document usually contains three main parts.
-
-| Part        | What does it do?           |
-|-------------|----------------------------|
-| YAML        | Contains document settings |
-| Markdown    | Contains text and headings |
-| Code chunks | Contain executable code    |
-
-The file has the extension `.qmd`.
-
-(The Carpentries, 2025)
-
-::: notes
-A Quarto document is saved as a QMD file.
-
-There are three important parts. YAML is at the top and contains settings like the title and author. Markdown is used for normal text and headings. Code chunks contain code that Quarto can execute.
-:::
-
-## A small R example
-
-Imagine we want to calculate the average number of hours that students studied.
-
-We have five values:
-
-```{r}
-study_hours <- c(4, 6, 8, 5, 7)
+```yaml
+---
+title: "Churn analysis"
+format: html
+bibliography: references.bib
+csl: apa.csl
+---
 ```
 
-The values are stored in a variable called `study_hours`.
+Below the YAML header, Markdown supplies prose and headings. Fenced R chunks contain executable code.
+
+YAML controls **document-level choices**. Chunk options control **what an individual cell shows or executes**.
 
 ::: notes
-Here is a small example using R.
-
-I have five values. Each value represents the number of hours a student studied. First, I store these values in a variable called study_hours.
+[45 sec] Indentation and colons matter in YAML. Changing output format does not require rewriting the analysis.
 :::
 
-## Calculating the average
+## Markdown and executable chunks
 
-We can use the `mean()` function in R.
+Markdown makes structure visible: `##` starts a section, `**text**` is bold, and backticks mark code.
 
 ```{r}
-average_hours <- mean(study_hours)
-average_hours
+#| label: overall-churn
+#| echo: true
+churn_data <- readr::read_csv("data/customer_churn_simulated.csv",
+                              show_col_types = FALSE)
+nrow(churn_data)                  # customers in the file
+mean(churn_data$churn == "Yes")   # overall churn rate
 ```
 
-The average is **6 hours**.
+`#|` lines are cell options. `echo` controls code visibility; `eval: false` skips execution; `include: false` runs a cell but hides both code and result. These choices affect display, not analytical validity.
 
 ::: notes
-Now I use the mean function. Mean calculates the average of the values.
-
-The result is six hours. Quarto executes the code and displays the result in the document. If I change the values and render the document again, the calculation is updated.
+[45 sec] This cell really runs when the slides are rendered: 600 customers, 15.7 % churned. `churn == "Yes"` gives TRUE/FALSE, and the mean of TRUE/FALSE values is the share of TRUE. Quarto uses the modern `#|` cell-option syntax. Hiding code does not remove it from the source.
 :::
 
-## What are code chunks?
+## Rendering: from source to publication
 
-Code chunks are sections in a Quarto document where we can write and execute code.
+**Edit → execute → convert → inspect**
 
-For example:
+- In RStudio, use **Render** for the current document.
+- From the project folder: `quarto render Tiago_Presentation.qmd`.
+- Inspect the generated file; a successful build does not guarantee good layout or valid interpretation.
 
-```` markdown
-```{r}
-numbers <- c(2, 4, 6)
-mean(numbers)
+PDF output needs a working LaTeX engine; this project uses XeLaTeX.
+
+::: notes
+[40 sec] A stale PDF is possible if the source is not re-rendered. Inspect the output after every build.
+:::
+
+## Citations and APA 7
+
+A BibTeX database stores bibliographic metadata; CSL applies a citation style. Quarto/Pandoc resolves citation keys and builds a reference list.
+
+- YAML: `bibliography: references.bib` and `csl: apa.csl`
+- In text: `[@knuth1984]` or `@knuth1984`
+- The reference list is generated from cited keys [@quarto]
+
+CSL controls formatting; it cannot verify that a source is real or relevant.
+
+::: notes
+[45 sec] Automation reduces formatting work but source titles, dates, DOIs, and interpretations still need human checking.
+:::
+
+## Reproducible project structure
+
+```text
+project/
+  _quarto.yml
+  Tiago_Presentation.qmd
+  Handout_Quarto.qmd
+  references.bib  apa.csl
+  data/       # CSV + generator script
+  analysis/   # worked churn analysis
+  exercise/   # class exercise
 ```
-````
 
-We can also control how the code is displayed.
-
-- `echo: true` shows the code.
-- `echo: false` hides the code.
-- `eval: false` prevents the code from running.
-
-(The Carpentries, 2025)
+Use relative paths, record data provenance and cleaning choices, keep a generator for simulated data, and state package requirements. Version control tracks source changes; it does not package every dependency automatically [@gandrud2020].
 
 ::: notes
-Code chunks are an important part of Quarto.
-
-They allow us to include R code directly in the document. We can decide if the code should be visible or hidden.
-
-For a presentation, showing the code can be useful because the audience can see how the result was calculated.
+[35 sec] Git preserves file history but does not freeze an R installation or make private data available to another reader.
 :::
 
-## What happens when we render?
+## Business question: customer churn and revenue risk
 
-The `.qmd` file is the source document.
+A telecom team wants to know which customer groups show more cancellations and where retention outreach may be worth testing.
 
-When we render it, Quarto processes the text and executes the code chunks.
+- How does churn vary across contract type and tenure?
+- How much recurring monthly revenue is associated with customers who leave?
+- Which active segments have higher observed churn?
 
-The result can be an HTML document or another supported output format.
-
-This means that the text, code and results stay connected (Quarto Development Team, n.d.).
-
-::: notes
-Rendering means creating the final document from the QMD file.
-
-Quarto reads the document, processes the text and runs the code chunks. It then creates the output.
-
-This is useful because we do not have to copy every result manually into another document.
-:::
-
-## Advantages and limitations
-
-| Advantages                    | Limitations                        |
-|-------------------------------|------------------------------------|
-| Text and code in one place    | Some technical knowledge is needed |
-| Results can be updated        | Code errors can stop rendering     |
-| Easier to follow the analysis | Software and packages are required |
-| Different output formats      | Initial setup takes time           |
-
-Quarto supports reproducible work, but it does not guarantee reproducibility by itself.
-
-(Rodrigues, 2023; The Carpentries, 2025)
-
-::: notes
-In my opinion, one of the biggest advantages is that everything is in one place.
-
-It is easier to understand what the code does and how the results were produced.
-
-However, Quarto also has limitations. Users need to understand some basic programming concepts. If the code contains an error, rendering may fail.
-:::
-
-## Short exercise for the class
-
-### Try it yourself
-
-Imagine these are the study hours of five students:
+The project dataset is **simulated**, not company evidence.
 
 ```{r}
-study_hours <- c(3, 5, 6, 7, 9)
+#| label: setup-data
+#| include: false
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+raw_customers <- read_csv("data/customer_churn_simulated.csv", show_col_types = FALSE)
+contract_medians <- raw_customers |>
+  group_by(contract) |>
+  summarise(contract_median = median(monthly_charge, na.rm = TRUE), .groups = "drop")
+customers <- raw_customers |>
+  left_join(contract_medians, by = "contract") |>
+  mutate(
+    monthly_charge = if_else(is.na(monthly_charge), contract_median, monthly_charge),
+    contract = factor(contract, levels = c("Month-to-month", "One year", "Two year")),
+    churn_flag = as.integer(churn == "Yes"),
+    monthly_revenue = monthly_charge
+  )
+by_contract <- customers |>
+  group_by(contract) |>
+  summarise(
+    customers = n(),
+    churned = sum(churn_flag),
+    churn_rate = mean(churn_flag),
+    churned_mrr = sum(monthly_revenue[churn_flag == 1]),
+    active_mrr = sum(monthly_revenue[churn_flag == 0]),
+    exposure = active_mrr * churn_rate,
+    .groups = "drop"
+  )
 ```
 
-**Your task:**
-
-- Create a variable called `average_hours`.
-- Use the `mean()` function.
-- Display the result.
-- Change one value and calculate the new average.
-
-**Question:** What happens to the average when one value changes?
-
 ::: notes
-Now I have a small exercise for you.
-
-You have five values representing study hours. Please calculate the average using the mean function.
-
-Then change one of the values and calculate the average again.
-
-Think about why the result changes. This is a simple example of how executable code works in a Quarto document.
+[45 sec] This is descriptive analysis for prioritizing investigation—not proof of why people churn.
 :::
 
-## Exercise One possible solution
+## The data-to-decision workflow
+
+1. Import the CSV and inspect rows, columns, types, and missingness.
+2. Clean categories and fill missing monthly charges with the median within contract type; record the count.
+3. Create tenure bands and a binary churn flag.
+4. Summarize rates and revenue by contract and tenure.
+5. Visualize segment rates and monthly revenue exposure.
+
+Each step is executable and explained in `analysis/churn_analysis.qmd`.
+
+::: notes
+[45 sec] The imputation rule preserves within-plan price differences better than one overall median. Imputation remains an assumption to disclose.
+:::
+
+## A readable analysis chunk
+
+```r
+customers |>
+  group_by(contract) |>
+  summarise(
+    customers = n(),
+    churn_rate = mean(churn == "Yes"),
+    churned_mrr = sum(monthly_charge[churn == "Yes"]),
+    .groups = "drop"
+  )
+```
+
+The rate is the share of rows in each contract group marked as churned. `churned_mrr` is their monthly charge total at cancellation, **not a forecast of annual loss**.
+
+::: notes
+[55 sec] Talk through `group_by`, `summarise`, and the denominator. Use rendered tables when presenting. This is not a causal or predictive model.
+:::
+
+## Visualize patterns, then interpret carefully
 
 ```{r}
-study_hours <- c(3, 5, 6, 7, 9)
+#| label: churn-charts
+#| echo: false
+#| layout-ncol: 2
+#| fig-width: 5.5
+#| fig-height: 3.4
+ggplot(by_contract, aes(contract, churn_rate)) +
+  geom_col(fill = "#2C6E8F", width = .65) +
+  geom_text(aes(label = paste0("n = ", customers)), vjust = -0.4, size = 4.6) +
+  scale_y_continuous(labels = scales::label_percent(), limits = c(0, .27)) +
+  labs(title = "Churn rate (share of customers)", x = NULL, y = NULL) +
+  theme_minimal(base_size = 16)
 
-average_hours <- mean(study_hours)
-
-average_hours
+ggplot(by_contract, aes(contract, exposure)) +
+  geom_col(fill = "#B36B35", width = .65) +
+  scale_y_continuous(labels = scales::label_dollar(accuracy = 1)) +
+  labs(title = "Illustrative exposure (USD per month)", x = NULL, y = NULL) +
+  theme_minimal(base_size = 16)
 ```
 
-The result is **6 hours**.
-
-If we change one of the values, the average changes too.
+**Exposure** = active segment MRR × observed churn rate: a scenario for ranking priorities, not a calibrated forecast.
 
 ::: notes
-One possible solution is to create the average_hours variable and use mean.
-
-The result is six. If we change one value, the result is calculated again. This is the basic idea behind executable code in Quarto.
+[50 sec] Left: proportions, with the denominator n above each bar. Right: the same rates translated into money. Month-to-month leads on both here, but in real data the two rankings can differ, so name each measure and look at rate, segment size and money together.
 :::
 
-## Conclusion
+## Result snapshot from the simulated run {.smaller}
 
-Literate programming connects code with explanations.
+Calculated during rendering, after the contract-specific median imputation (fixed-seed synthetic sample).
 
-Quarto makes it possible to put text, code and results into one document.
+```{r}
+#| echo: false
+by_contract |>
+  transmute(
+    contract, customers, churned,
+    churn_rate = scales::percent(churn_rate, accuracy = 0.1),
+    churned_mrr = scales::dollar(churned_mrr, prefix = "USD ", accuracy = 1)
+  ) |>
+  knitr::kable(col.names = c("Contract", "Customers", "Churned",
+                             "Churn rate", "Observed churned MRR"))
+```
 
-This can help us:
-
-- Understand data analysis more easily
-- Document our work
-- Update results
-- Share our analysis with others
-
-**Thank you for listening!**
+Month-to-month leads on rate and churned MRR. Two-year above one-year? With only 97 two-year customers, that gap is sampling noise. Descriptive outputs, not evidence about a real operator.
 
 ::: notes
-To conclude, literate programming helps us explain code instead of only writing instructions for a computer.
-
-Quarto gives us a practical way to combine text, code and results. This can make our work easier to understand and share.
-
-Thank you for listening.
+[40 sec] The fixed-seed synthetic file produces 72 churned out of 330 month-to-month customers (21.8%), compared with 6.9% and 10.3% in the other groups. The table is computed in the document after imputation. Simulation rules create these associations. Likely question: why is two-year (10.3 %) above one-year (6.9 %) although the generator lowers two-year churn? Answer: only 97 two-year customers; 10 vs. 12 churners. The 95 % intervals (about 5–19 % and 4–12 %) overlap widely, so this is sampling noise, not a finding. Small segments need intervals, not just point estimates.
 :::
 
-## References
+## What the results can and cannot say
 
-@book{rodrigues2023, author = {Rodrigues, Bruno}, title = {Building Reproducible Analytical Pipelines with R}, year = {2023}, url = {<https://raps-with-r.dev/%7D> }
+**Can say:** in this generated sample, churn rates and revenue exposure differ across recorded groups.
 
-@online{carpentries2025, author = {{The Carpentries Incubator}}, title = {Reproducible Publications with Quarto}, year = {2025}, url = {<https://carpentries-incubator.github.io/reproducible-publications-quarto/aio.html%7D> }
+**Cannot say:** contract type or support history caused cancellation, or that an offer will prevent it.
 
-@article{knuth1984, author = {Knuth, Donald E.}, title = {Literate Programming}, journal = {The Computer Journal}, volume = {27}, number = {2}, pages = {97--111}, year = {1984}, doi = {10.1093/comjnl/27.2.97} }
+Selection, measurement, omitted variables, and simulation rules limit generalization. Validate on real data and test interventions [@hubercourse].
 
-@online{quartoDocs, author = {{Quarto Development Team}}, title = {Quarto Documentation}, url = {<https://quarto.org/docs/%7D> }
+::: notes
+[45 sec] Separate association from causation. Sensible next steps are validating definitions, investigating service issues, and testing a retention offer with a comparison group.
+:::
+
+## Takeaways and class exercise
+
+- Literate programming joins explanation, code, and computed output.
+- Quarto renders; R computes; RStudio supports the workflow.
+- Reproducibility needs documented data, decisions, software, and inspection.
+- In the exercise, compare churn by contract and explain one limitation.
+
+::: notes
+[35 sec] Close with `exercise/Churn_Exercise.qmd`. Planned speaking time: about 11–13 minutes, excluding the exercise.
+:::
+
+## References {.allowframebreaks}
+
+::: {#refs}
+:::
+
+## Use of AI tools
+
+Generative AI tools (OpenAI ChatGPT/Codex, Anthropic Claude) were used as aids for drafting, coding and checking. Their use, my verification of all content, and my responsibility for the work are set out in the signed affidavit at the end of the handout.

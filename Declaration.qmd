@@ -1,0 +1,19 @@
+---
+title: "Affidavit"
+subtitle: "Literate Programming with Quarto – Data Analysis for Decision-Making"
+author: "Tiago José Camelo Moura"
+lang: en
+format:
+  pdf:
+    documentclass: article
+    papersize: a4
+    fontsize: 11pt
+    geometry:
+      - top=30mm
+      - bottom=30mm
+      - left=20mm
+      - right=20mm
+    pdf-engine: xelatex
+---
+
+{{< include _declaration.qmd >}}

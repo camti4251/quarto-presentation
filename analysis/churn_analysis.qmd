@@ -1,0 +1,149 @@
+---
+title: "Customer Churn and Revenue Risk"
+subtitle: "A reproducible, simulated business analytics example"
+author: "DADM classroom demonstration"
+date: "November 18, 2026"
+lang: en
+bibliography: ../references.bib
+csl: ../apa.csl
+format:
+  html:
+    embed-resources: true
+    toc: true
+    code-fold: false
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Business question and data status
+
+A telecommunications company wants to understand where cancellations and recurring-revenue exposure are concentrated. This teaching data set is **simulated** with a fixed random seed; monthly prices use USD solely as an illustrative unit. It contains no real customer records and must not be cited as industry evidence. The script in `data/generate_simulated_data.R` explains the rules that generated it.
+
+## Import and inspect
+
+`read_csv()` imports the comma-separated file and infers column types. Check the number of rows, names, types, and missing values before interpreting a summary.
+
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+customers_raw <- read_csv("data/customer_churn_simulated.csv", show_col_types = FALSE)
+glimpse(customers_raw)
+summarise(customers_raw,
+          customers = n(),
+          missing_monthly_charge = sum(is.na(monthly_charge)))
+```
+
+## Clean and create analysis variables
+
+Missing monthly charges are imputed with the median among customers on the same contract type. This preserves plan-level price differences better than one overall median. We retain and report the number imputed. Tenure is grouped into three readable bands.
+
+```{r}
+missing_charge_n <- sum(is.na(customers_raw$monthly_charge))
+
+contract_medians <- customers_raw |>
+  group_by(contract) |>
+  summarise(contract_median = median(monthly_charge, na.rm = TRUE), .groups = "drop")
+
+customers <- customers_raw |>
+  left_join(contract_medians, by = "contract") |>
+  mutate(
+    monthly_charge = if_else(is.na(monthly_charge), contract_median, monthly_charge),
+    contract = factor(contract, levels = c("Month-to-month", "One year", "Two year")),
+    tenure_band = cut(tenure_months, breaks = c(0, 12, 36, Inf),
+                      labels = c("0–12 months", "13–36 months", "37+ months")),
+    churn_flag = as.integer(churn == "Yes"),
+    monthly_revenue = monthly_charge
+  ) |>
+  select(-contract_median)
+
+missing_charge_n
+summary(customers$monthly_charge)
+```
+
+Imputation makes the revenue summaries possible but can change group means; it does not restore unknown individual charges.
+
+## Summarize churn by segment
+
+A churn rate is a proportion, so the denominator is all customers in the segment. The table reports sample size alongside rate.
+
+```{r}
+contract_summary <- customers |>
+  group_by(contract) |>
+  summarise(
+    customers = n(),
+    churned = sum(churn_flag),
+    churn_rate = mean(churn_flag),
+    churned_mrr = sum(monthly_revenue[churn_flag == 1]),
+    .groups = "drop"
+  ) |>
+  arrange(desc(churn_rate))
+
+contract_summary
+```
+
+The churned MRR is the sum of monthly charges associated with observed churned accounts. It is not annual loss or a causal estimate.
+
+## Compare tenure and contract patterns
+
+```{r}
+tenure_summary <- customers |>
+  group_by(tenure_band) |>
+  summarise(customers = n(), churn_rate = mean(churn_flag), .groups = "drop")
+
+segment_summary <- customers |>
+  group_by(contract, tenure_band) |>
+  summarise(customers = n(), churn_rate = mean(churn_flag),
+            active_mrr = sum(monthly_revenue[churn_flag == 0]),
+            churned_mrr = sum(monthly_revenue[churn_flag == 1]),
+            .groups = "drop")
+
+tenure_summary
+segment_summary
+```
+
+## Visualize rate and revenue exposure
+
+```{r}
+ggplot(contract_summary, aes(x = contract, y = churn_rate)) +
+  geom_col(fill = "#2C6E8F", width = .68) +
+  scale_y_continuous(labels = scales::label_percent(accuracy = 1),
+                     limits = c(0, NA)) +
+  labs(title = "Observed churn rate by contract type",
+       x = NULL, y = "Customers marked as churned") +
+  theme_minimal(base_size = 12)
+```
+
+A separate measure makes the financial scale visible. The scenario estimate applies each contract group's observed rate to its active monthly revenue. It is a rough prioritization device, not a forecast.
+
+```{r}
+revenue_risk <- customers |>
+  group_by(contract) |>
+  summarise(
+    active_customers = sum(churn_flag == 0),
+    observed_churn_rate = mean(churn_flag),
+    active_mrr = sum(monthly_revenue[churn_flag == 0]),
+    observed_churned_mrr = sum(monthly_revenue[churn_flag == 1]),
+    illustrative_next_period_exposure = active_mrr * observed_churn_rate,
+    .groups = "drop"
+  )
+
+revenue_risk
+
+ggplot(revenue_risk, aes(x = contract, y = illustrative_next_period_exposure)) +
+  geom_col(fill = "#B36B35", width = .68) +
+  scale_y_continuous(labels = scales::label_dollar(prefix = "$", accuracy = 1)) +
+  labs(title = "Illustrative monthly revenue exposure",
+       subtitle = "Active MRR multiplied by the segment's observed churn rate",
+       x = NULL, y = "Simulated USD per month") +
+  theme_minimal(base_size = 12)
+```
+
+## Interpretation and decision limits
+
+Read the rate, group size, and currency measure together. A high churn rate in a small segment does not automatically imply the largest revenue exposure. The simulated data-generating process intentionally links churn with contract type, tenure, and support contacts, so its patterns cannot establish real-world causes.
+
+Validate measures on a defined period of real, privacy-protected data; check whether billing and churn dates align; and investigate service issues. If the company wants to know whether an offer reduces churn, test it with a credible comparison group. Descriptive differences alone do not identify an intervention effect.
