@@ -13,7 +13,7 @@ This project supports a 10–15 minute presentation and 3–5 page academic hand
 
 Appendix A also asks for a related classroom exercise using R where appropriate. Its source is `exercise/Churn_Exercise.qmd`; the instructor reference is separate.
 
-The handout ends with an affidavit based on Stephan Huber's own template (`hubchev/temp_apa_en`, section "Affidavit (for empirical work)"), adapted for simulated data, the required GitHub publication and the use of generative AI. Its single source is `_declaration.qmd`; it is included in the handout and rendered separately as `Declaration.pdf`. Print, sign and date it before submission. See `REVIEW_2026-11-23.md` for the latest review.
+The handout ends with an affidavit based on Stephan Huber's own template (`hubchev/temp_apa_en`, section "Affidavit (for empirical work)"), adapted for simulated data, the required GitHub publication and the use of generative AI. Its single source is `_declaration.qmd`; it is included in the handout and rendered separately as `Declaration.pdf`. Print, sign and date it before submission.
 
 ## Project map
 
