@@ -1,10 +1,35 @@
-.Rproj.user
+# R and RStudio
+.Rproj.user/
 .Rhistory
 .RData
-.quarto/
+.Ruserdata
+.Renviron
 
+# Quarto caches and intermediate files
 /.quarto/
-**/*.quarto_ipynb
-
 _freeze/
+**/*.quarto_ipynb
+*_files/
+*.knit.md
+*.rmarkdown
+
+# LaTeX intermediates (keep-tex, failed renders)
+*.tex
+*.aux
+*.log
+*.out
+*.toc
+
+# Affidavit: source is tracked; rendered and signed copies stay local (ILIAS only)
+Declaration.pdf
+*signed*
+*unterschrieben*
+
+# Local notes and backups
+REVIEW*.md
+backup*/
+
+# macOS and iCloud
 .DS_Store
+._*
+*.icloud
