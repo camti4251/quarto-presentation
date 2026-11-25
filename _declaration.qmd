@@ -12,7 +12,7 @@ I hereby affirm that I, Tiago José Camelo Moura, prepared the submitted work fo
 ```{=latex}
 \vspace{1.5cm}
 \noindent\rule{6cm}{0.4pt}\hfill\rule{6cm}{0.4pt}\\
-Location, Date\hfill Signature
+Place: \underline{\hspace{3cm}} \quad Date: November 25, 2026\hfill Signature
 ```
 :::
 
@@ -22,5 +22,5 @@ Location, Date\hfill Signature
 | | |
 |:---------------------------------|:---------------------------------|
 | \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ | \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ |
-| Location, Date | Signature |
+| Place: __________ · Date: November 25, 2026 | Signature |
 :::

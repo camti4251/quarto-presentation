@@ -1,76 +1,60 @@
 ---
 title: "Literate Programming with Quarto"
+shorttitle: "Literate Programming with Quarto"
 subtitle: "From data analysis to reproducible publications"
-author: "Tiago José Camelo Moura"
+author:
+  - name: "Tiago José Camelo Moura"
+    corresponding: true
+    email: "moura.tiago@stud.hs-fresenius.de"
+    affiliations:
+      - name: "Hochschule Fresenius"
+        city: "Cologne"
+        country: "Germany"
 date: "2026-11-18"
 date-format: long
 lang: en
+course: "Data Analysis for Decision-Making"
+professor: "Prof. Dr. Stephan Huber"
+duedate: "November 18, 2026"
+note: "Student ID: 401518481"
+documentmode: stu
 bibliography: references.bib
-csl: apa.csl
-number-sections: true
 format:
-  pdf:
-    documentclass: article
-    author: '`Tiago José Camelo Moura\\[4pt] \small Data Analysis for Decision-Making · Prof. Dr. Stephan Huber\\ \small Hochschule Fresenius Köln · Winter term 2026/27`{=latex}'
+  apaquarto-pdf:
     papersize: a4
-    fontsize: 11pt
-    geometry:
-      - top=30mm
-      - bottom=30mm
-      - left=20mm
-      - right=20mm
-    pdf-engine: xelatex
     output-file: Handout_Quarto.pdf
-  html:
+  apaquarto-html:
     embed-resources: true
     toc: true
-    subtitle: 'From data analysis to reproducible publications<br><small>Data Analysis for Decision-Making · Prof. Dr. Stephan Huber · Hochschule Fresenius Köln · Winter term 2026/27</small>'
-    number-sections: true
     output-file: Handout_Quarto.html
 execute:
   echo: true
   warning: false
   message: false
 ---
-
 # Purpose and central argument
 
-Data analysis is not complete when a number has been calculated. A reader also needs to know which data were used, how they were transformed, why analytical choices were made, and what the result can support. When code, output, and explanation live in separate files, changes can leave a report displaying outdated values. Literate programming addresses this coordination problem by treating a program as something written for people as well as machines [@knuth1984]. In contemporary analysis, an executable document can place narrative, code, and results together.
-
-This handout explains how Quarto implements that workflow and illustrates it with a simulated customer-churn analysis. Reproducible-paper workflows written with RStudio and Quarto provide a practical model for connecting method and narrative [@bauer2023]. The argument is deliberately limited: an executable document improves traceability, but it does not make weak data or unjustified conclusions reliable. Reproducibility requires the data, code, assumptions, software context, and interpretation to be sufficiently documented [@peng2009; @gandrud2020].
+Data analysis needs more than a result: readers need the data, decisions, and code that produced it. Literate programming puts explanation beside executable instructions and their output, making an analysis easier to inspect and update [@knuth1984]. This handout explains Quarto’s role in that workflow and demonstrates it with a simulated customer-churn example. Reproducibility still depends on documented inputs, assumptions, software, and interpretation [@gandrud2020; @peng2009].
 
 # Quarto as an analytical publishing workflow
 
-A Quarto source file (`.qmd`) combines a YAML front matter block, Markdown, and optional executable code cells. YAML specifies document-wide metadata and output settings. Markdown structures prose with headings, lists, links, and tables. An R cell is fenced with `{r}` and can include options such as `echo: true` to show code or `eval: false` to skip execution. These are presentation and execution controls; hiding code does not remove it from the source.
+A Quarto source file (`.qmd`) combines YAML metadata, Markdown prose, and optional executable code cells. Quarto coordinates rendering; R performs calculations, and knitr commonly executes R chunks. RStudio helps edit and manage a project, but the same source can be rendered from a terminal [@quarto].
 
-Quarto is a publishing system, not a statistical package. During rendering, Quarto processes the source and coordinates execution through an engine; for R, a common engine is knitr. R performs the calculations, while Quarto converts the combined content to formats such as HTML, PDF, or slides [@quarto]. RStudio is an integrated development environment that helps a writer edit the source, run code, inspect files, and invoke rendering. The same project can also be rendered from a terminal, so the IDE is useful but not a requirement.
+During rendering, code runs and its output is placed beside the explanation. A successful build does not prove that the analysis is correct: inspect paths, output, citations, and layout. Use `echo` to show code or `eval: false` to skip execution; these settings affect display or execution, not analytical validity.
 
-A minimal header illustrates configuration:
-
-```yaml
----
-title: "Customer churn"
-format: html
-bibliography: references.bib
-csl: apa.csl
----
-```
-
-The source below the header can contain an executable R chunk. When the document is rendered, its output is recalculated from current inputs. Rendering is therefore a build step, not a guarantee: users should check that code ran, paths resolved, citations appeared, and the layout is readable. PDF generation additionally depends on a LaTeX engine and suitable fonts and packages.
-
-Quarto uses Pandoc citation syntax with a BibTeX database and a Citation Style Language file. For example, `[@knuth1984]` produces an in-text citation, and the bibliography is generated from cited keys rather than typed into the document. Here `references.bib` stores source metadata and `apa.csl` supplies APA 7 formatting. Automation reduces repetitive formatting errors but cannot validate whether an author, date, DOI, or interpretation is correct; bibliographic metadata still requires checking [@hubercourse].
+Quarto/Pandoc resolves citation keys from `references.bib` and formats them with the APA 7 CSL supplied by apaquarto. For example, `[@knuth1984]` produces an in-text citation, while the cited entries generate the reference list. Automated formatting still requires checking source metadata and relevance [@hubercourse].
 
 # Reproducibility and project practice
 
-An executable report links a result to the steps that created it. This makes changes easier to review and can reduce transcription errors. A project should nevertheless preserve inputs, document data provenance and cleaning rules, use relative file paths, record software and package requirements, and avoid relying on a hidden interactive session. Version control makes edits and their history inspectable; it does not freeze an environment or make private inputs available to another reader. Reproducibility also differs from replication with new data: rerunning the same workflow checks computational consistency, whereas a new dataset or study asks whether findings extend beyond the original inputs [@peng2009; @gandrud2020].
+A reproducible project preserves its inputs, documents cleaning choices, uses relative paths, and records software requirements. Version control makes edits reviewable but does not freeze the software environment. Rerunning the same workflow checks computational consistency; replication with new data asks whether findings extend beyond the original inputs [@gandrud2020; @peng2009].
 
-This project keeps its generated CSV, deterministic R data-generation script, analysis source, exercise, bibliography, CSL, and rendered files in a clear folder structure. The example is explicitly simulated. Its data-generating rules are transparent and repeatable, but its outputs are teaching material rather than evidence about real telecommunications customers.
+This project includes a deterministic data generator, its CSV output, the analysis source, and a class exercise. All customer records are synthetic: the example teaches an analytical workflow and provides no evidence about a real company.
 
 # Customer churn and revenue risk example
 
-The business question is which customer segments show higher cancellation rates and which represent greater recurring-revenue exposure. One row represents a subscriber. Fields include contract type, tenure, support-contact count, monthly charge, and churn status. The R workflow imports the CSV with `readr`, inspects dimensions and missingness, standardizes categories, imputes missing monthly charges using the median within contract type, and records the imputation count. It then creates tenure bands and a binary churn flag. A grouped `dplyr` summary calculates segment sizes, churn rates, and the monthly charges belonging to churned accounts; `ggplot2` charts rates and revenue. These package roles are part of the broader tidyverse ecosystem [@wickham2019].
+The business question is which customer segments have higher cancellation rates and how much monthly revenue is associated with customers who leave. The included workflow imports 600 records, inspects missingness, imputes missing charges with the median for each contract type, and summarizes customer counts, churn rates, and churned monthly recurring revenue. These steps use `readr` and `dplyr`; the wider analysis also uses `ggplot2` to visualize segment comparisons [@wickham2019].
 
-The following executable summary makes the denominator explicit and produces the segment table from the included CSV.
+The following executable summary makes the denominator explicit and produces the table from the included CSV.
 
 ```{r}
 #| label: tbl-contract-churn
@@ -108,7 +92,6 @@ knitr::kable(by_contract, digits = 2,
 ```{r}
 #| label: rate-intervals
 #| include: false
-# 95% confidence intervals for two segment rates, used in the text below
 ci_for <- function(k) {
   row <- by_contract[by_contract$contract == k, ]
   ci <- prop.test(row$churned, row$customers)$conf.int
@@ -119,30 +102,23 @@ ci_two <- ci_for("Two year")
 ci_one <- ci_for("One year")
 ```
 
+Table @tbl-contract-churn reports each segment’s size, churn count, churn rate, and monthly charges associated with cancellations. The rate is the share of customers in that segment marked as churned; the revenue total answers a separate question.
 
-@tbl-contract-churn reports the segment denominator, churn count, churn rate, and monthly charges associated with churn. `group_by(contract)` defines the segments. Inside `summarise()`, `n()` counts all customers in the segment and the mean of a zero/one flag equals the churn proportion. The monthly charge total answers a separate financial question. Reporting both measures and the group size prevents a rate from being read without its scale.
+In this fixed-seed sample, 72 of 330 month-to-month customers churn (21.8%), compared with 12 of 173 one-year customers (6.9%) and 10 of 97 two-year customers (10.3%). Month-to-month customers also have the largest observed churned monthly revenue total (USD 4,712). Because the two-year group is small, its higher rate than the one-year group is weak evidence: approximate 95% intervals (`r ci_two$txt` and `r ci_one$txt`) overlap widely. The ordering is sampling noise, not a reliable segment difference.
 
-In the fixed-seed sample, 72 of 330 month-to-month customers are marked as churned (21.8%); the corresponding rates are 12 of 173 one-year customers (6.9%) and 10 of 97 two-year customers (10.3%). After the documented imputation, the month-to-month group also has the largest observed monthly charge total associated with churn ($4,712). These figures are generated by the included simulation rules and should not be interpreted as evidence about an actual operator. One detail illustrates why group size matters: the two-year rate is higher than the one-year rate, although the generating script assigns two-year contracts a lower churn propensity. With only `r ci_two$n` two-year customers, approximate 95% confidence intervals for the two rates (`r ci_two$txt` and `r ci_one$txt`, computed with `prop.test()`) overlap widely, so the ordering of these two segments is sampling noise rather than a finding.
+The generator deliberately leaves 18 monthly charges missing. Contract-specific median imputation keeps these rows in the summary, but does not recover their true bills. In real data, investigate why values are missing and test whether the pattern differs by segment.
 
-Missingness deserves its own check. The example deliberately blanks 18 of 600 monthly charges. Filling them with a contract-specific median allows the group revenue summaries to include these rows, but the imputed values are estimates, not recovered bills. A business analysis should examine why charges are missing and test whether missingness differs by churn status or customer segment. If the missingness is systematic, a simple median can bias the comparison; reporting the count and rule makes that limitation visible.
-
-The two visual summaries serve different purposes: a bar chart of rates answers which group has the greater proportion, while an exposure chart puts the amount into a business scale. Figures should identify the measure, segment, and unit. Here the prices are simulated USD solely for the example. The scenario estimate multiplies active monthly revenue by the historical segment churn rate, assuming that rate applies to current active customers. It is useful for comparing rough priorities, but it is not a calibrated prediction, lifetime-value calculation, or causal estimate.
-
-For segment `g`, the observed churn rate is
+For segment *g*, the observed churn rate is
 
 $$
 \widehat{p}_g = \frac{\text{customers marked churned in }g}{\text{all observed customers in }g}.
 $$
 
-The denominator matters: comparing raw churn counts would favor large groups even if their rates were lower. Revenue measures answer a different question. The sum of monthly charges among churned accounts is a descriptive estimate of recurring monthly revenue associated with observed cancellations. It is not necessarily realized accounting loss: billing periods, partial months, discounts, and replacement customers are not modeled.
-
-The example also reports a simple next-period scenario: active monthly revenue in a segment multiplied by its historical segment churn rate. This translates a rate into a rough exposure estimate, but assumes the prior rate applies to active accounts and is not a calibrated forecast. It should be labeled as an illustration and refreshed with a clearly defined time window in real operations.
-
-A decision-maker should compare rate, segment size, and revenue together. A small group can have a high rate but little total exposure; a large group with a moderate rate may have more revenue at stake. The results can support prioritizing further investigation, such as reviewing service complaints or designing a retention experiment. They cannot show that contract type or support contacts caused cancellation. Such claims require a credible research design and evidence addressing confounding and selection. If an intervention is proposed, a controlled test with a defined outcome is more informative than treating descriptive associations as causal effects.
+Report the denominator with each rate. The churned monthly-revenue total is descriptive, not an accounting loss or forecast. A scenario that multiplies active monthly revenue by the historical churn rate can help prioritize investigation, but it is not calibrated prediction. Compare rate, sample size, and revenue together; the synthetic associations cannot show that contract type or support contacts cause cancellation. Real retention changes should be tested with a defined outcome and comparison group.
 
 # Conclusion
 
-Quarto makes it practical to keep analysis, explanation, and publication in one version-controlled project. YAML configures the document, Markdown communicates the reasoning, R cells compute results, and a bibliography plus CSL automates citation formatting. This workflow supports transparent review when inputs and decisions are documented. It does not replace subject knowledge, data validation, or critical interpretation. In the churn example, the most defensible output is a transparent description of simulated segment differences and a cautious proposal for what to test next.
+Quarto connects narrative, code, and computed output in a version-controlled project. This makes an analysis easier to review when data and decisions are documented. The simulated churn example illustrates the workflow while keeping interpretation limited to the generated sample.
 
 \clearpage
 

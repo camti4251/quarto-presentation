@@ -2,7 +2,7 @@
 title: "Literate Programming with Quarto"
 subtitle: "From data analysis to reproducible publications"
 author: "Tiago José Camelo Moura"
-institute: "Data Analysis for Decision-Making · Prof. Dr. Stephan Huber · Hochschule Fresenius Köln · Winter term 2026/27"
+institute: "Data Analysis for Decision-Making · Prof. Dr. Stephan Huber · Hochschule Fresenius Köln · Winter term 2026/27 · Email: moura.tiago@stud.hs-fresenius.de · Student ID: 401518481"
 date: "2026-11-18"
 date-format: long
 lang: en

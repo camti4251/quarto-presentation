@@ -28,6 +28,7 @@ Declaration.pdf
 # Local notes and backups
 REVIEW*.md
 backup*/
+/work/
 
 # macOS and iCloud
 .DS_Store
